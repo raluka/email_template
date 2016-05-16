@@ -53,6 +53,25 @@ describe 'service' do
     end
   end
 
+  describe 'GET on /api/v1/templates' do
+    it 'returns an empty list if they are no email templates' do
+      get '/api/v1/templates'
+      expect(last_response).to be_ok
+      expect(last_response.body).to eq([].to_json)
+    end
+
+    it 'returns a list with existing email templates' do
+      template_1 = EmailTemplate.create(id: 1305161, title: 'Test title 1', body: 'Test body 1')
+      template_2 = EmailTemplate.create(id: 1305162, title: 'Test title 2', body: 'Test body 2')
+      get '/api/v1/templates'
+      expect(last_response).to be_ok
+      attributes = JSON.parse(last_response.body)
+      expect(attributes.length).to eq(2)
+      expect(attributes.first['title']).to eq(template_1.title)
+      expect(attributes.second['body']).to eq(template_2.body)
+    end
+  end
+
   describe 'POST on /api/v1/templates' do
     context 'with valid parameters' do
       it 'creates a template' do

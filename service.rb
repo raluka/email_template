@@ -39,6 +39,12 @@ get '/api/v1/templates/:id' do
   end
 end
 
+# get index
+get '/api/v1/templates' do
+templates = EmailTemplate.all
+  templates.to_json
+end
+
 # create email template
 post '/api/v1/templates' do
   begin
